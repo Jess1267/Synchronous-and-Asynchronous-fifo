@@ -20,85 +20,48 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module synchronous_fifo(clk,reset_i,full_o,data_i,wr_en_i,empty_o,data_o,rd_en_i);
-input clk,reset_i,wr_en_i,rd_en_i;
-output full_o,empty_o;
-input [2:0] data_i;
-output reg [2:0] data_o;
-parameter depth = 8;
 
-reg [2:0] mem [0 : depth-1];
-reg [2:0] wrt_ptr,rd_ptr;
-reg [3:0] count ;
+module sync_fifo(full,empty,rd,
+                                wrt_en,rd_en,clk,rst,wrt);
+input wrt_en,rd_en,clk,rst;
+input [3:0]wrt;
 
-assign empty_o = (count == 0)? 1 : 0;
-assign full_o = (count == depth)? 1 : 0;
+output reg [3:0]rd;
+output full, empty;
 
-// for writing
-always @(posedge clk,negedge reset_i)
+//parameter width=4, depth=8;
+
+reg [3:0] memory[7:0];
+reg [3:0] rd_ptr,wrt_ptr;
+
+//conditions
+assign empty = (rd_ptr[2:0]==wrt_ptr[2:0] && rd_ptr[3]==wrt_ptr[3]);
+assign full = (rd_ptr[2:0]==wrt_ptr[2:0] && rd_ptr[3]!=wrt_ptr[3]);
+
+//write
+always @(posedge clk or posedge rst)
 begin
-    if(!reset_i)
-    begin
-    wrt_ptr <= 0;
+    if(rst)begin 
+        wrt_ptr<=0;
     end
-    else
-    begin
-        if(wr_en_i)
-        begin
-            mem[wrt_ptr] <= data_i; 
-            wrt_ptr <= wrt_ptr + 1;
-        end
+    else if(wrt_en && !full)begin
+        memory[wrt_ptr[2:0]]<=wrt;
+        wrt_ptr<=wrt_ptr+1;
     end
 end
 
-// for reading 
-always @(posedge clk,negedge reset_i)
+//read
+always @(posedge clk or posedge rst)
 begin
-    if(!reset_i)
-    begin
-    rd_ptr <= 0;
+    if(rst)begin 
+        rd_ptr<=0;
+        rd<=0;
     end
-    else
-    begin
-        if(rd_en_i)
-        begin
-            data_o <= mem[rd_ptr]; 
-            rd_ptr <= rd_ptr + 1;
-        end
+    else if(rd_en && !empty)begin
+        rd<=memory[rd_ptr[2:0]];
+        rd_ptr<=rd_ptr+1;
     end
 end
 
-// for counting
-always @(posedge clk, negedge reset_i)
-begin
-    if(!reset_i)
-    begin
-        count <= 0;
-    end
-    else
-    begin
-        if(rd_en_i)
-        begin
-            if(wr_en_i)
-            begin
-            count <= count + 0;
-            end
-            else
-            begin
-            count = count - 1;
-            end
-        end
-        else
-        begin
-             if(wr_en_i)
-             begin
-                count <= count + 1;
-             end
-             else
-             begin
-                count <= count + 0;
-             end
-        end
-    end
-end
+
 endmodule
