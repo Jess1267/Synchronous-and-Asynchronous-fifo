@@ -22,7 +22,14 @@ They works on same clock domain but the speed of writing and reading differs. Bu
 ![image](https://github.com/user-attachments/assets/5f89010a-4fd2-410e-8e7e-a3c3df5cbd11)
 
 ## Asynchronous FIFO
-synchronizer => grey code
+An asynchronous FIFO buffer is designed to operate between two clock domains with different clock frequencies. It allows seamless data transfer between two systems that are not synchronized. 
+
+Gray code is used in asynchronous FIFOs because it minimizes errors when crossing clock domains by ensuring that only one bit changes at a time during pointer updates. This behavior is critical in asynchronous FIFOs, where pointers need to be transferred between different clock domains to calculate full and empty flags.
+
+Synchronizers are needed in an asynchronous FIFO because the write clock domain and the read clock domain operate independently and may have no fixed frequency relationship. This asynchronous behavior introduces challenges such as metastability, which can lead to unreliable data transfer if not properly handled.
+
+### Asynchronus FIFO Module
+![image](https://github.com/user-attachments/assets/2ad8fcdd-d9ec-44b3-972e-27028560298c)
 
 ### Waveform for Asynchronus FIFO
 ![image](https://github.com/user-attachments/assets/ba6dab4f-c390-497e-b941-171c5d0c9e5c)
