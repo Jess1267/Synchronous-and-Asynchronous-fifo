@@ -20,3 +20,10 @@ They works on same clock domain but the speed of writing and reading differs. Bu
 
 ### Waveform for synchronus FIFO
 ![image](https://github.com/user-attachments/assets/5f89010a-4fd2-410e-8e7e-a3c3df5cbd11)
+
+## Asynchronous FIFO
+synchronizer => grey code
+
+### Waveform for Asynchronus FIFO
+![image](https://github.com/user-attachments/assets/ba6dab4f-c390-497e-b941-171c5d0c9e5c)
+
