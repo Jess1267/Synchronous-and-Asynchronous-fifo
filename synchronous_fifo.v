@@ -39,7 +39,7 @@ assign empty = (rd_ptr[2:0]==wrt_ptr[2:0] && rd_ptr[3]==wrt_ptr[3]);
 assign full = (rd_ptr[2:0]==wrt_ptr[2:0] && rd_ptr[3]!=wrt_ptr[3]);
 
 //write
-always @(posedge clk or posedge rst)
+always @(posedge clk)
 begin
     if(rst)begin 
         wrt_ptr<=0;
@@ -51,7 +51,7 @@ begin
 end
 
 //read
-always @(posedge clk or posedge rst)
+always @(posedge clk)
 begin
     if(rst)begin 
         rd_ptr<=0;
